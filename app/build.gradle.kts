@@ -65,6 +65,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
 
+    // Material Components (for XML themes)
+    implementation("com.google.android.material:material:1.10.0")
+
     // Compose
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation("androidx.compose.ui:ui-graphics:1.5.4")

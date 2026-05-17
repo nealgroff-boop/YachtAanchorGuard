@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Use Material3 Theme instead of the older Material.Light -->
-    <style name="Theme.YachtAnchorGuard" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Material 3 uses different attribute names -->
+    <!-- Use Material3 Theme with standard android: prefix for better compatibility -->
+    <style name="Theme.YachtAnchorGuard" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorSecondary">@color/md_theme_light_secondary</item>
         <item name="colorTertiary">@color/md_theme_light_tertiary</item>
