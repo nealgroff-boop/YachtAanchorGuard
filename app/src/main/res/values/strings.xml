@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Yacht Anchor Guard</string>
+    <string name="set_anchor">Set Anchor</string>
+    <string name="current_position">Current Position</string>
+    <string name="anchor_position">Anchor Position</string>
+    <string name="distance_to_anchor">Distance to Anchor</string>
+    <string name="gps_accuracy">GPS Accuracy</string>
+    <string name="satellites">Satellites</string>
+    <string name="drift_radius">Drift Radius</string>
+    <string name="alarm_armed">Alarm Armed</string>
+    <string name="alarm_disarmed">Alarm Disarmed</string>
+    <string name="gps_status">GPS Status</string>
+    <string name="acknowledge_alarm">Acknowledge Alarm</string>
+    <string name="map_view">Map View</string>
+    <string name="settings">Settings</string>
+    <string name="units">Units</string>
+    <string name="meters">Meters</string>
+    <string name="feet">Feet</string>
+    <string name="alarm_sound">Alarm Sound</string>
+    <string name="test_alarm">Test Alarm</string>
+    <string name="sms_alerts">SMS Alerts</string>
+    <string name="select_contact">Select Contact</string>
+    <string name="sms_remote_query">SMS Remote Query</string>
+    <string name="keyword">Keyword</string>
+    <string name="accuracy_threshold">Accuracy Threshold (m)</string>
+    <string name="loss_of_gps_timeout">Loss of GPS Timeout (min)</string>
+    <string name="gps_fix_interval">GPS Fix Interval (sec)</string>
+    <string name="min_track_distance">Min Track Distance (m)</string>
+    <string name="default_drift_radius">Default Drift Radius (m)</string>
+    <string name="distance">Distance</string>
+    <string name="bearing">Bearing (°)</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    <string name="gps_disabled">GPS Disabled</string>
+    <string name="gps_enabled">GPS Enabled</string>
+    <string name="anchor_drag_alarm">Anchor Drag Alarm!</string>
+    <string name="boat_drifted">Boat has drifted outside radius.</string>
+    <string name="current_position_label">Current position:</string>
+    <string name="distance_from_anchor">Distance from anchor:</string>
+    <string name="test_mode">Test Mode</string>
+    <string name="simulate_drift">Simulate Drift</string>
+</resources>

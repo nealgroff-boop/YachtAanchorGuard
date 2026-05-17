@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors (Nautical Theme) -->
+    <color name="md_theme_light_primary">#00658B</color>
+    <color name="md_theme_light_on_primary">#FFFFFF</color>
+    <color name="md_theme_light_primary_container">#B8E1FF</color>
+    <color name="md_theme_light_on_primary_container">#001E2E</color>
+
+    <!-- Secondary Colors -->
+    <color name="md_theme_light_secondary">#4A6278</color>
+    <color name="md_theme_light_on_secondary">#FFFFFF</color>
+    <color name="md_theme_light_secondary_container">#CDE4F8</color>
+    <color name="md_theme_light_on_secondary_container">#051E2F</color>
+
+    <!-- Tertiary Colors -->
+    <color name="md_theme_light_tertiary">#5F5E7E</color>
+    <color name="md_theme_light_on_tertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiary_container">#E8DEF8</color>
+    <color name="md_theme_light_on_tertiary_container">#1A1937</color>
+
+    <!-- Background -->
+    <color name="md_theme_light_background">#FFFBFE</color>
+    <color name="md_theme_light_on_background">#1F1B20</color>
+
+    <!-- Surface -->
+    <color name="md_theme_light_surface">#FFFBFE</color>
+    <color name="md_theme_light_on_surface">#1F1B20</color>
+
+    <!-- Error -->
+    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_on_error">#FFFFFF</color>
+    <color name="md_theme_light_error_container">#F9DEDC</color>
+    <color name="md_theme_light_on_error_container">#410E0B</color>
+
+    <!-- Custom Colors -->
+    <color name="alarm_red">#FF3B30</color>
+    <color name="success_green">#34C759</color>
+    <color name="warning_orange">#FF9500</color>
+    <color name="anchor_blue">#007AFF</color>
+    <color name="boat_white">#FFFFFF</color>
+    <color name="radar_grid">#E0E0E0</color>
+</resources>
