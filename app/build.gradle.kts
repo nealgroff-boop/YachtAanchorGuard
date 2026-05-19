@@ -68,6 +68,9 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+
     // Room Database - Using KSP instead of KAPT to fix duplicate class errors
     val roomVersion = "2.6.0"
     implementation("androidx.room:room-runtime:$roomVersion")

@@ -36,13 +36,6 @@ class GpsTrackingService : Service(), LocationListener {
     private var lastGpsLossAlarmTime = 0L
     private var lastLocationTime = System.currentTimeMillis()
 
-    companion object {
-        private const val NOTIFICATION_ID = 1
-        private const val CHANNEL_ID = "gps_tracking_channel"
-        private const val ACTION_START = "com.nautical.yachtanchorguard.START_TRACKING"
-        private const val ACTION_STOP = "com.nautical.yachtanchorguard.STOP_TRACKING"
-    }
-
     override fun onCreate() {
         super.onCreate()
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -112,7 +105,7 @@ class GpsTrackingService : Service(), LocationListener {
         serviceScope.launch {
             try {
                 val settings = preferencesManager.appSettingsFlow.first()
-                val anchor = repository.getAnchor() ?: return@launch
+                val anchor = repository.getAnchorOnce() ?: return@launch
 
                 // Filter by accuracy threshold
                 if (location.accuracy > settings.accuracyThreshold) {
@@ -127,7 +120,7 @@ class GpsTrackingService : Service(), LocationListener {
                     altitude = location.altitude,
                     bearing = location.bearing,
                     speed = location.speed,
-                    satellites = 0 // Would need GNSS status API for accurate count
+                    satellites = 0
                 )
 
                 // Check if within drift radius
@@ -238,6 +231,10 @@ class GpsTrackingService : Service(), LocationListener {
     }
 
     companion object {
+        private const val NOTIFICATION_ID = 1
+        private const val CHANNEL_ID = "gps_tracking_channel"
+        const val ACTION_START = "com.nautical.yachtanchorguard.START_TRACKING"
+        const val ACTION_STOP = "com.nautical.yachtanchorguard.STOP_TRACKING"
         const val ACTION_DRIFT_ALARM = "com.nautical.yachtanchorguard.DRIFT_ALARM"
         const val ACTION_GPS_LOSS_ALARM = "com.nautical.yachtanchorguard.GPS_LOSS_ALARM"
     }

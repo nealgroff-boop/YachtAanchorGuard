@@ -34,11 +34,11 @@ class SmsReceiver : BroadcastReceiver() {
                 }
 
                 val messages = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    intent.getParcelableArrayExtra(Telephony.Sms.Intents.SMS_MESSAGES_KEY, SmsMessage::class.java)
+                    intent.getParcelableArrayExtra("pdus", SmsMessage::class.java)
                         ?.filterIsInstance<SmsMessage>() ?: emptyList()
                 } else {
                     @Suppress("DEPRECATION")
-                    intent.getSerializableExtra(Telephony.Sms.Intents.SMS_MESSAGES_KEY)?.let { extra ->
+                    intent.getSerializableExtra("pdus")?.let { extra ->
                         (extra as? Array<*>)?.filterIsInstance<SmsMessage>() ?: emptyList()
                     } ?: emptyList()
                 }
