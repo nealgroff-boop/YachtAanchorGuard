@@ -105,7 +105,7 @@ class GpsTrackingService : Service(), LocationListener {
         serviceScope.launch {
             try {
                 val settings = preferencesManager.appSettingsFlow.first()
-                val anchor = repository.getAnchorOnce() ?: return@launch
+                val anchor = repository.getAnchor() ?: return@launch
 
                 // Filter by accuracy threshold
                 if (location.accuracy > settings.accuracyThreshold) {
