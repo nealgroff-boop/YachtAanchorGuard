@@ -228,7 +228,4 @@ fun DetailRow(label: String, value: String) {
     }
 }
 
-// Helper for rotation
-fun Modifier.rotate(degrees: Float): Modifier = this.then(
-    androidx.compose.ui.draw.rotate(degrees)
-)
+
