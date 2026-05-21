@@ -44,6 +44,8 @@ class AnchorRepository(private val database: AppDatabase) {
     }
 
     // GPS Fix operations
+    fun getLatestGpsFixFlow(): Flow<GpsFix?> = database.gpsFixDao().getLatestFixFlow()
+
     suspend fun getLatestGpsFix(): GpsFix? = database.gpsFixDao().getLatestFix()
 
     suspend fun getRecentGpsFixesSince(since: Long): List<GpsFix> =

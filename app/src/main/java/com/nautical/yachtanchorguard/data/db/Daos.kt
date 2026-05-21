@@ -30,6 +30,9 @@ interface AnchorDao {
 @Dao
 interface GpsFixDao {
     @Query("SELECT * FROM gps_fixes ORDER BY timestamp DESC LIMIT 1")
+    fun getLatestFixFlow(): Flow<GpsFix?>
+
+    @Query("SELECT * FROM gps_fixes ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLatestFix(): GpsFix?
 
     @Query("SELECT * FROM gps_fixes WHERE timestamp > :since ORDER BY timestamp ASC")

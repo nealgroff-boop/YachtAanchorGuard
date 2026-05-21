@@ -18,7 +18,8 @@ import com.nautical.yachtanchorguard.data.model.AppSettings
 @Composable
 fun SettingsScreen(
     settings: AppSettings,
-    onUpdateSettings: (AppSettings) -> Unit
+    onUpdateSettings: (AppSettings) -> Unit,
+    onTestAlarm: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     
@@ -63,13 +64,24 @@ fun SettingsScreen(
             subtitle = "Ignore fixes worse than ${settings.accuracyThreshold.toInt()}m",
             icon = Icons.Default.GpsFixed
         ) {
-            // Simple slider or text input could go here
+            // Slider could be added here
         }
         
         Spacer(modifier = Modifier.height(24.dp))
         Text("ALARM & SMS", style = MaterialTheme.typography.titleSmall, color = Color(0xFF00658B), fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         
+        // Test Alarm
+        SettingsRow(
+            title = "Test Alarm Sound",
+            subtitle = "Play the current alarm sound",
+            icon = Icons.Default.VolumeUp
+        ) {
+            Button(onClick = onTestAlarm) {
+                Text("TEST")
+            }
+        }
+
         // SMS Alerts
         SettingsRow(
             title = "SMS Alerts",

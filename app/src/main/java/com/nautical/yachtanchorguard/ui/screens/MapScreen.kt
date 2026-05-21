@@ -1,26 +1,27 @@
 package com.nautical.yachtanchorguard.ui.screens
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.nautical.yachtanchorguard.data.model.AnchorData
 import com.nautical.yachtanchorguard.data.model.GpsFix
 import com.nautical.yachtanchorguard.util.GpsUtils
-import kotlin.math.cos
-import kotlin.math.sin
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
+import org.osmdroid.views.overlay.Polygon
+import android.graphics.Color as AndroidColor
 
 @Composable
 fun MapScreen(
@@ -28,29 +29,88 @@ fun MapScreen(
     anchor: AnchorData?,
     recentFixes: List<GpsFix>
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF001E2E))) {
-        // Radar View
-        RadarView(
-            modifier = Modifier.fillMaxSize(),
-            gpsFix = gpsFix,
-            anchor = anchor,
-            recentFixes = recentFixes
+    Box(modifier = Modifier.fillMaxSize()) {
+        AndroidView(
+            factory = { context ->
+                MapView(context).apply {
+                    setTileSource(TileSourceFactory.MAPNIK)
+                    setMultiTouchControls(true)
+                    controller.setZoom(18.0)
+                }
+            },
+            update = { mapView ->
+                mapView.overlays.clear()
+
+                // 1. Draw Historical Track
+                if (recentFixes.isNotEmpty()) {
+                    val track = Polyline(mapView).apply {
+                        outlinePaint.color = AndroidColor.BLUE
+                        outlinePaint.strokeWidth = 5f
+                        setPoints(recentFixes.map { GeoPoint(it.latitude, it.longitude) })
+                    }
+                    mapView.overlays.add(track)
+                }
+
+                // 2. Draw Anchor and Drift Radius
+                anchor?.let {
+                    val anchorPoint = GeoPoint(it.latitude, it.longitude)
+                    
+                    // Anchor Marker
+                    val anchorMarker = Marker(mapView).apply {
+                        position = anchorPoint
+                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                        title = "Anchor Position"
+                    }
+                    mapView.overlays.add(anchorMarker)
+
+                    // Drift Radius Circle
+                    val circlePoints = Polygon.pointsAsCircle(anchorPoint, it.driftRadius.toDouble())
+                    val circle = Polygon(mapView).apply {
+                        points = circlePoints
+                        fillPaint.color = AndroidColor.argb(50, 0, 255, 0)
+                        outlinePaint.color = AndroidColor.GREEN
+                        outlinePaint.strokeWidth = 2f
+                    }
+                    mapView.overlays.add(circle)
+                }
+
+                // 3. Draw Yacht Position
+                gpsFix?.let {
+                    val yachtPoint = GeoPoint(it.latitude, it.longitude)
+                    val yachtMarker = Marker(mapView).apply {
+                        position = yachtPoint
+                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                        rotation = it.bearing
+                        title = "Yacht Position"
+                    }
+                    mapView.overlays.add(yachtMarker)
+                    
+                    // Center map on yacht if it's the first fix
+                    if (mapView.tag == null) {
+                        mapView.controller.setCenter(yachtPoint)
+                        mapView.tag = "centered"
+                    }
+                }
+
+                mapView.invalidate()
+            },
+            modifier = Modifier.fillMaxSize()
         )
-        
+
         // Overlay Controls
         Column(
             modifier = Modifier.align(Alignment.TopEnd).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             FloatingActionButton(
-                onClick = { /* Zoom In */ },
+                onClick = { /* Zoom In handled by MapView */ },
                 containerColor = Color.White.copy(alpha = 0.8f),
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Zoom In")
             }
             FloatingActionButton(
-                onClick = { /* Zoom Out */ },
+                onClick = { /* Zoom Out handled by MapView */ },
                 containerColor = Color.White.copy(alpha = 0.8f),
                 modifier = Modifier.size(48.dp)
             ) {
@@ -87,103 +147,6 @@ fun MapScreen(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun RadarView(
-    modifier: Modifier,
-    gpsFix: GpsFix?,
-    anchor: AnchorData?,
-    recentFixes: List<GpsFix>
-) {
-    Canvas(modifier = modifier) {
-        val center = Offset(size.width / 2, size.height / 2)
-        val maxRadius = size.width.coerceAtMost(size.height) / 2 * 0.8f
-        
-        // Draw Radar Circles
-        for (i in 1..4) {
-            drawCircle(
-                color = Color.Cyan.copy(alpha = 0.2f),
-                radius = maxRadius * (i / 4f),
-                center = center,
-                style = Stroke(width = 1.dp.toPx())
-            )
-        }
-        
-        // Draw Crosshair
-        drawLine(
-            color = Color.Cyan.copy(alpha = 0.2f),
-            start = Offset(center.x - maxRadius, center.y),
-            end = Offset(center.x + maxRadius, center.y),
-            strokeWidth = 1.dp.toPx()
-        )
-        drawLine(
-            color = Color.Cyan.copy(alpha = 0.2f),
-            start = Offset(center.x, center.y - maxRadius),
-            end = Offset(center.x, center.y + maxRadius),
-            strokeWidth = 1.dp.toPx()
-        )
-        
-        // Draw Anchor (Center)
-        if (anchor != null) {
-            drawCircle(
-                color = Color.Yellow,
-                radius = 8.dp.toPx(),
-                center = center
-            )
-            
-            // Draw Drift Radius Circle
-            // Scale: let's say maxRadius represents 100m for now
-            val scale = maxRadius / 100f 
-            drawCircle(
-                color = Color.Red.copy(alpha = 0.3f),
-                radius = anchor.driftRadius * scale,
-                center = center,
-                style = Stroke(width = 2.dp.toPx())
-            )
-        }
-        
-        // Draw Yacht Position
-        if (gpsFix != null && anchor != null) {
-            val distance = GpsUtils.calculateDistance(gpsFix.latitude, gpsFix.longitude, anchor.latitude, anchor.longitude)
-            val bearing = GpsUtils.calculateBearing(anchor.latitude, anchor.longitude, gpsFix.latitude, gpsFix.longitude)
-            
-            val scale = maxRadius / 100f
-            val r = distance * scale
-            val angleRad = Math.toRadians((bearing - 90).toDouble())
-            
-            val yachtPos = Offset(
-                center.x + (r * cos(angleRad)).toFloat(),
-                center.y + (r * sin(angleRad)).toFloat()
-            )
-            
-            // Draw Track
-            if (recentFixes.isNotEmpty()) {
-                var lastPoint = center // Start from anchor for visualization if needed, or first fix
-                recentFixes.forEachIndexed { index, fix ->
-                    val d = GpsUtils.calculateDistance(fix.latitude, fix.longitude, anchor.latitude, anchor.longitude)
-                    val b = GpsUtils.calculateBearing(anchor.latitude, anchor.longitude, fix.latitude, fix.longitude)
-                    val rad = d * scale
-                    val ang = Math.toRadians((b - 90).toDouble())
-                    val point = Offset(
-                        center.x + (rad * cos(ang)).toFloat(),
-                        center.y + (rad * sin(ang)).toFloat()
-                    )
-                    if (index > 0) {
-                        drawLine(Color.White.copy(alpha = 0.5f), lastPoint, point, strokeWidth = 2.dp.toPx())
-                    }
-                    lastPoint = point
-                }
-            }
-            
-            // Draw Boat Icon (Simple Triangle)
-            drawCircle(
-                color = Color.White,
-                radius = 6.dp.toPx(),
-                center = yachtPos
-            )
         }
     }
 }

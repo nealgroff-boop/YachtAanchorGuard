@@ -65,9 +65,8 @@ class MainActivity : ComponentActivity() {
             // Data states
             val anchor by repository.getAnchorFlow().collectAsStateWithLifecycle(initialValue = null)
             val settings by preferencesManager.appSettingsFlow.collectAsStateWithLifecycle(initialValue = com.nautical.yachtanchorguard.data.model.AppSettings())
+            val currentGpsFix by repository.getLatestGpsFixFlow().collectAsStateWithLifecycle(initialValue = null)
             
-            // Mock GPS fix for UI preview/initial state
-            var currentGpsFix by remember { mutableStateOf<com.nautical.yachtanchorguard.data.model.GpsFix?>(null) }
             var isAlarmActive by remember { mutableStateOf(false) }
 
             Scaffold(
@@ -147,11 +146,15 @@ class MainActivity : ComponentActivity() {
                             settings = settings,
                             onUpdateSettings = { newSettings ->
                                 scope.launch {
-                                    // Update each setting in preferencesManager
                                     preferencesManager.updateUnits(newSettings.units)
                                     preferencesManager.updateSmsEnabled(newSettings.smsEnabled)
-                                    // ... update others
+                                    preferencesManager.updateSmsPhoneNumber(newSettings.smsPhoneNumber)
+                                    preferencesManager.updateSmsKeyword(newSettings.smsKeyword)
+                                    preferencesManager.updateTestMode(newSettings.testModeEnabled)
                                 }
+                            },
+                            onTestAlarm = {
+                                // Logic to play test alarm sound
                             }
                         )
                     }
