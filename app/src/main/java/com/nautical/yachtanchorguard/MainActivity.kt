@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
                                     preferencesManager.updateSmsEnabled(newSettings.smsEnabled)
                                     preferencesManager.updateSmsPhoneNumber(newSettings.smsPhoneNumber)
                                     preferencesManager.updateSmsKeyword(newSettings.smsKeyword)
-                                    preferencesManager.updateTestMode(newSettings.testModeEnabled)
+                                    preferencesManager.updateTestModeEnabled(newSettings.testModeEnabled)
                                 }
                             },
                             onTestAlarm = {
